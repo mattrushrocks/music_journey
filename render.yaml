@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: music-research-agent
+    runtime: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: OPENAI_MODEL
+        value: gpt-5-mini
+      - key: PORT
+        value: "10000"

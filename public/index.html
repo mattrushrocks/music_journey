@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Music Research Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <section class="hero">
+        <p class="eyebrow">QR Conversation Companion</p>
+        <h1>Ask about the Apple Music and Spotify personas.</h1>
+        <p class="lede">
+          This agent extends the printed journey map. Visitors can ask about personas,
+          friction points, patterns, assignments, and the larger story behind the work.
+        </p>
+        <div class="chips" id="suggestions"></div>
+      </section>
+
+      <section class="chat-panel">
+        <div class="chat-header">
+          <div>
+            <h2>Project Agent</h2>
+            <p id="status">Checking connection...</p>
+          </div>
+          <button id="resetButton" class="secondary">New chat</button>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <form id="chatForm" class="composer">
+          <label class="sr-only" for="messageInput">Ask a question</label>
+          <textarea
+            id="messageInput"
+            name="message"
+            rows="3"
+            placeholder="Ask about a persona, compare Apple Music and Spotify, or explore the journey map..."
+            required
+          ></textarea>
+          <div class="composer-footer">
+            <p>Tip: questions like “Which persona had the biggest onboarding friction?” work well.</p>
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <template id="messageTemplate">
+      <article class="message">
+        <p class="message-role"></p>
+        <div class="message-body"></div>
+      </article>
+    </template>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

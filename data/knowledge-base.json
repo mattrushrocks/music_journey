@@ -1,0 +1,495 @@
+{
+  "project": {
+    "title": "Apple Music and Spotify Persona Companion",
+    "team": "Gabriel Bankhead, Matt Rushforth, Ashton Osazuwa, Benjamin Todd",
+    "summary": "This agent supports a printed music research exhibit centered on persona work and an Apple Music journey map. It helps visitors ask follow-up questions about the personas, compare Apple Music and Spotify users, and understand what the journey map reveals about behavior, friction, trust, and retention.",
+    "how_to_answer": [
+      "Ground every answer in the uploaded persona and journey-map material.",
+      "Do not claim the project studied people or behaviors that are not present in the provided files.",
+      "If a visitor asks for something not shown in the files, say that the current materials do not include it.",
+      "When useful, compare Apple Music and Spotify personas by motivations, friction, and platform fit.",
+      "Keep answers clear, concise, and welcoming for someone scanning a QR code from a printed artifact."
+    ],
+    "assignments_overview": [
+      "The materials present a set of music-user personas across Apple Music and Spotify.",
+      "The main journey-map artifact focuses on Apple Music and overlays two Apple Music personas: Reid Madsen and Sheila Applegate.",
+      "The journey map tracks emotional shifts and friction across ten stages, from platform relationship to long-term takeaway."
+    ],
+    "available_material_notes": [
+      "The provided Personas PDF contains five personas total: three Spotify personas and two Apple Music personas.",
+      "The provided Journey Map PDF contains one Apple Music user journey map with overlaid persona comparison.",
+      "If the team has additional persona files beyond these PDFs, they are not yet loaded into this knowledge base."
+    ],
+    "journey_map_overview": {
+      "focus": "Apple Music user journey map with overlaid persona comparison for Reid Madsen, 'The Audiophile,' and Sheila Applegate, 'The Apple Loyalist.'",
+      "audience_scale_note": "The artifact labels Apple Music as having 108 million users.",
+      "key_takeaways": [
+        "Apple Music works best when it feels deeply integrated with the Apple ecosystem and preserves quality across devices.",
+        "Trust is a major theme: reliability and continuity build confidence, while inconsistency causes a sharp emotional drop.",
+        "Audio quality is central to the Apple Music experience presented here, especially for the audiophile persona.",
+        "Friction often appears during cross-device transitions, hidden settings, library complexity, and moments where quality feels inconsistent."
+      ],
+      "stages": [
+        "Platform Relationship",
+        "Trigger Moment",
+        "Entry Point",
+        "Content Selection",
+        "Playback Experience",
+        "Cross Context Use",
+        "Maintenance Over Time",
+        "Success State",
+        "Failure State",
+        "Experience Takeaway"
+      ],
+      "emotion_labels": {
+        "sheila_curve": "Trust",
+        "reid_curve": "Interest",
+        "annotated_states": [
+          "Expectation",
+          "Comfort",
+          "Confusion",
+          "Focus",
+          "Stable",
+          "Relief",
+          "Disappointment",
+          "Trust/Doubt",
+          "Friction",
+          "Recover"
+        ]
+      },
+      "stage_insights": [
+        {
+          "stage": "Platform Relationship",
+          "goal": [
+            "Fit within Apple ecosystem",
+            "Access highest-quality audio"
+          ],
+          "thoughts": [
+            "\"This works with everything I use\"",
+            "\"Is this the best quality available?\""
+          ],
+          "frictions": [
+            "Concern about losing familiarity",
+            "Concern over audio limitations"
+          ],
+          "insights": [
+            "Maintain ecosystem continuity",
+            "Highlight quality advantages"
+          ]
+        },
+        {
+          "stage": "Trigger Moment",
+          "goal": [
+            "Play music that fits the moment",
+            "Experience high-quality playback"
+          ],
+          "thoughts": [
+            "\"What fits right now?\"",
+            "\"Will this sound good?\""
+          ],
+          "frictions": [
+            "Hesitation if it feels unfamiliar",
+            "Concern about playback quality"
+          ],
+          "insights": [
+            "Context-aware suggestions",
+            "Surface quality indicators"
+          ]
+        },
+        {
+          "stage": "Entry Point",
+          "goal": [
+            "Seamless across devices",
+            "Access to high-quality audio"
+          ],
+          "thoughts": [
+            "\"This should continue where I left off\"",
+            "\"How do I get the best output?\""
+          ],
+          "frictions": [
+            "Device inconsistency",
+            "Hidden quality settings"
+          ],
+          "insights": [
+            "Strong continuity signals",
+            "Expose quality controls"
+          ]
+        },
+        {
+          "stage": "Content Selection",
+          "goal": [
+            "Choose music for context and audience",
+            "Find high-quality recordings"
+          ],
+          "thoughts": [
+            "\"Will this work here?\"",
+            "\"Is this version high quality?\""
+          ],
+          "frictions": [
+            "Library confusion and navigation changes",
+            "Lack of clarity on quality"
+          ],
+          "insights": [
+            "Improve library clarity",
+            "Label audio quality clearly"
+          ]
+        },
+        {
+          "stage": "Playback Experience",
+          "goal": [
+            "Seamless, connected playback",
+            "Highest fidelity experience"
+          ],
+          "thoughts": [
+            "\"Everything should stay in sync\"",
+            "\"This sounds incredible\""
+          ],
+          "frictions": [
+            "Playback inconsistency",
+            "Compression or inconsistency"
+          ],
+          "insights": [
+            "Improve system clarity",
+            "Optimize and highlight quality"
+          ]
+        },
+        {
+          "stage": "Cross Context Use",
+          "goal": [
+            "Maintain continuity across devices",
+            "Maintain audio quality"
+          ],
+          "thoughts": [
+            "\"This should follow me\"",
+            "\"Does quality drop here?\""
+          ],
+          "frictions": [
+            "Handoff friction",
+            "Quality inconsistency"
+          ],
+          "insights": [
+            "Seamless transitions",
+            "Maintain consistent output"
+          ]
+        },
+        {
+          "stage": "Maintenance Over Time",
+          "goal": [
+            "Stay confident using the system",
+            "Maintain control over quality"
+          ],
+          "thoughts": [
+            "\"What changed?\"",
+            "\"Why can't I control this?\""
+          ],
+          "frictions": [
+            "Updates and library complexity",
+            "Lack of control and clarity"
+          ],
+          "insights": [
+            "Guided updates",
+            "Advanced controls"
+          ]
+        },
+        {
+          "stage": "Success State",
+          "goal": [
+            "Confirm system reliability",
+            "Experience effortless listening"
+          ],
+          "thoughts": [
+            "\"Works across everything\"",
+            "\"That was easy\""
+          ],
+          "frictions": [
+            "Trust is fragile",
+            "Drops quickly"
+          ],
+          "insights": [
+            "Reinforce reliability",
+            "Quality validated"
+          ]
+        },
+        {
+          "stage": "Failure State",
+          "goal": [
+            "Restore confidence",
+            "Avoid frustration"
+          ],
+          "thoughts": [
+            "\"Why is this inconsistent?\"",
+            "\"This isn't worth it\""
+          ],
+          "frictions": [
+            "Loss of continuity",
+            "Immediate friction"
+          ],
+          "insights": [
+            "Fast recovery and clarity",
+            "Quality failure leads to a sharp drop"
+          ]
+        },
+        {
+          "stage": "Experience Takeaway",
+          "goal": [
+            "Maintain long-term trust",
+            "Keep the experience easy"
+          ],
+          "thoughts": [
+            "\"This fits my life\"",
+            "\"Easiest wins\""
+          ],
+          "frictions": [
+            "Stops support if trust is lost",
+            "Average loyalty"
+          ],
+          "insights": [
+            "Highlight ecosystem value",
+            "Quality-based retention"
+          ]
+        }
+      ]
+    }
+  },
+  "personas": {
+    "apple_music": [
+      {
+        "name": "Reid Madsen",
+        "age": "34",
+        "role_or_identity": "The Audiophile",
+        "education": "Bachelors Degree",
+        "job": "Computer Programmer",
+        "platform": "Apple Music",
+        "short_bio": "Loves enjoying music on high-quality equipment and uses music while programming or gaming.",
+        "goals": [
+          "Get the highest audio quality possible",
+          "Access a wide range of artists",
+          "Use a platform that supports critical listening"
+        ],
+        "behaviors": [
+          "Gets annoyed with sub-par audio",
+          "Keeps up with state-of-the-art equipment",
+          "Nerds out about the science and technology",
+          "Is willing to pay for high-quality audio",
+          "Loves niche old-school artists"
+        ],
+        "pain_points": [
+          "Hates listening to low-quality audio",
+          "Needs a high-quality platform with a wide range of artists"
+        ],
+        "motivations": [
+          "Highest possible fidelity",
+          "Focused music experience",
+          "Access to artists without extra distractions"
+        ],
+        "why_this_platform": [
+          "Provides the highest quality",
+          "Easily accessible without extra features",
+          "Wide range of artists"
+        ],
+        "quote": "The materials do not include a direct first-person quote for Reid.",
+        "journey_notes": {
+          "discovery": "Evaluates Apple Music in terms of quality and ecosystem fit.",
+          "onboarding": "Likely sensitive to whether quality controls are visible and understandable.",
+          "daily_use": "Listens critically and notices compression, inconsistency, or handoff issues.",
+          "friction": "Quality inconsistency, hidden settings, and playback inconsistency strongly affect trust.",
+          "retention_or_switching": "Likely to stay when quality is validated and leave if trust in fidelity drops."
+        }
+      },
+      {
+        "name": "Sheila Applegate",
+        "age": "56",
+        "role_or_identity": "The Apple Loyalist",
+        "education": "Masters Degree",
+        "job": "High School Teacher",
+        "platform": "Apple Music",
+        "short_bio": "Picked up iTunes early, follows Apple closely, and sees Apple Music as a natural extension of her long-term investment in the Apple ecosystem.",
+        "goals": [
+          "Build an environment that is comfortable for her family",
+          "Stay up to date with all things Apple",
+          "Connect music with her home, car, and everyday life"
+        ],
+        "behaviors": [
+          "Enjoys the interconnected Apple ecosystem",
+          "Pays for the Apple Music family plan",
+          "Listens through her smart home system",
+          "Buys the latest Apple products and stays updated",
+          "Exercises to music"
+        ],
+        "pain_points": [
+          "Understanding new updates",
+          "Finding how to upload music from iTunes",
+          "Accidental purchases from kids"
+        ],
+        "motivations": [
+          "Family convenience",
+          "Familiarity with Apple products",
+          "Seamless integration across devices"
+        ],
+        "why_this_platform": [
+          "Easy family sharing",
+          "Fits well into what she knows",
+          "Familiar with iTunes",
+          "Loves the music focus"
+        ],
+        "quote": "The materials do not include a direct first-person quote for Sheila.",
+        "journey_notes": {
+          "discovery": "Apple Music feels like an easy extension of her existing Apple habits.",
+          "onboarding": "Benefits from familiarity but can be thrown by updates or legacy iTunes tasks.",
+          "daily_use": "Uses Apple Music across home systems, family settings, and exercise routines.",
+          "friction": "Update changes, family-plan complexity, and confusion around older iTunes workflows.",
+          "retention_or_switching": "Likely retained by ecosystem value, ease, and continuity across devices."
+        }
+      }
+    ],
+    "spotify": [
+      {
+        "name": "Franklin Jacobs",
+        "age": "22",
+        "role_or_identity": "The Social Listener",
+        "education": "College Junior",
+        "job": "Lead Associate at a popular retail clothing store",
+        "platform": "Spotify",
+        "short_bio": "Uses music to connect with others by sharing playlists and discussing new releases with friends and family.",
+        "goals": [
+          "Make friends through sharing music",
+          "Stay up to date with trends",
+          "Be seen as someone with good taste"
+        ],
+        "behaviors": [
+          "Curates playlists for work shifts and social settings",
+          "Starts and joins Jam Sessions",
+          "Shares and collaborates on playlists",
+          "Actively seeks recommendations and new music",
+          "Attends concerts and music festivals"
+        ],
+        "pain_points": [
+          "Music platforms that feel isolating",
+          "Sharing without feedback",
+          "Limited real-time collaboration"
+        ],
+        "motivations": [
+          "Connection through music",
+          "Visible social interaction",
+          "Discovery that feels communal"
+        ],
+        "why_this_platform": [
+          "Easy sharing and collaboration",
+          "Visible social features",
+          "Real-time group listening",
+          "Discovery that feels communal"
+        ],
+        "quote": "The materials do not include a direct first-person quote for Franklin.",
+        "journey_notes": {
+          "discovery": "Responds well to social recommendation and collaboration features.",
+          "onboarding": "Likes a platform that quickly exposes social tools and shared listening.",
+          "daily_use": "Playlist making, collaborative listening, and social sharing are core habits.",
+          "friction": "Feels let down when interaction is passive or isolating.",
+          "retention_or_switching": "Most loyal when the platform makes music feel social and participatory."
+        }
+      },
+      {
+        "name": "Brayden Johnson",
+        "age": "26",
+        "role_or_identity": "The Podcaster",
+        "education": "College Dropout",
+        "job": "Sales Representative",
+        "platform": "Spotify",
+        "short_bio": "Uses Spotify to learn about the world and the news through podcasts and enjoys being part of podcast communities.",
+        "goals": [
+          "Learn more about the news through podcasts",
+          "Stay up to date with favorite podcasters",
+          "Be involved within podcast communities"
+        ],
+        "behaviors": [
+          "Loves listening to podcasts whenever he can",
+          "Wants to stay up to date with the world",
+          "Uses audio to lock in",
+          "Mainly listens to podcasts but sometimes also music"
+        ],
+        "pain_points": [
+          "Does not know when new podcast episodes come out",
+          "Does not have anyone to discuss episodes with",
+          "Wants to find podcasts similar to what he already likes"
+        ],
+        "motivations": [
+          "Information and current events",
+          "Podcast community",
+          "Convenience in one app"
+        ],
+        "why_this_platform": [
+          "Most popular and available podcasts",
+          "Uses Android",
+          "It is the same app as his music"
+        ],
+        "quote": "The materials do not include a direct first-person quote for Brayden.",
+        "journey_notes": {
+          "discovery": "Finds value in Spotify as a combined music and podcast platform.",
+          "onboarding": "Likely wants better episode surfacing and community hooks.",
+          "daily_use": "Podcast-heavy use with occasional music listening.",
+          "friction": "Discovery and community discussion are weaker than he wants.",
+          "retention_or_switching": "Stays when new episodes and adjacent podcast recommendations are easy to track."
+        }
+      },
+      {
+        "name": "Brandon Clark",
+        "age": "37",
+        "role_or_identity": "The Casual Listener",
+        "education": "Associates Degree",
+        "job": "Medical Assistant",
+        "platform": "Spotify (Free Tier)",
+        "short_bio": "Primarily listens during commutes, chores, and everyday routines, usually letting playlists run in the background.",
+        "goals": [
+          "Add background music to mundane tasks",
+          "Access favorite artists",
+          "Make commutes feel shorter"
+        ],
+        "behaviors": [
+          "Uses Daily Mixes and Daily Drive regularly",
+          "Rarely searches for new artists intentionally",
+          "Mostly listens to a rotation of favorite artists",
+          "Likes to play music around the house",
+          "Lets playlists run without adjusting often"
+        ],
+        "pain_points": [
+          "Ads breaking immersion",
+          "Overly repetitive mixes",
+          "Having to actively search for music"
+        ],
+        "motivations": [
+          "Ease and familiarity",
+          "Low-effort listening",
+          "Background support for routine life"
+        ],
+        "why_this_platform": [
+          "Able to make playlists for free",
+          "The algorithm does the work for him",
+          "Familiar and easy to use",
+          "Does not require active curation"
+        ],
+        "quote": "The materials do not include a direct first-person quote for Brandon.",
+        "journey_notes": {
+          "discovery": "Benefits from familiar, low-effort recommendation systems.",
+          "onboarding": "Needs a simple experience that starts working quickly.",
+          "daily_use": "Passive listening across chores, commuting, and home routines.",
+          "friction": "Ads and repetitive recommendations disrupt what should be effortless listening.",
+          "retention_or_switching": "Likely stays when the platform remains easy, familiar, and minimally demanding."
+        }
+      }
+    ]
+  },
+  "comparative_insights": [
+    "The Spotify personas in these materials emphasize social connection, podcasts, passive listening, and convenience.",
+    "The Apple Music personas emphasize ecosystem fit, family integration, continuity across devices, and especially audio quality.",
+    "Franklin values collaboration and group listening, while Sheila values family sharing and ecosystem familiarity.",
+    "Brandon wants low-effort background listening, while Reid is highly attentive to fidelity and control.",
+    "The Apple Music journey map shows trust and quality consistency as especially important to long-term retention."
+  ],
+  "faq_seed_questions": [
+    "How do the Apple Music personas differ from the Spotify personas in these materials?",
+    "Which persona is most motivated by social connection?",
+    "Which persona cares most about audio quality, and how does that shape the journey?",
+    "Where does the Apple Music journey map show the biggest friction points?",
+    "What does the journey map suggest Apple Music should improve over time?"
+  ]
+}

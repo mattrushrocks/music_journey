@@ -1,0 +1,14 @@
+{
+  "name": "persona-journey-agent",
+  "version": "1.0.0",
+  "description": "QR-linked persona and journey map chat companion",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "qr": "node scripts/generate-qr.js"
+  }
+}

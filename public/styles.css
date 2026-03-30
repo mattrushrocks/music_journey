@@ -1,0 +1,246 @@
+:root {
+  color-scheme: light;
+  --bg: #f6efe4;
+  --panel: rgba(255, 250, 244, 0.84);
+  --panel-strong: rgba(255, 250, 244, 0.96);
+  --ink: #1e1a17;
+  --muted: #5e554d;
+  --line: rgba(30, 26, 23, 0.12);
+  --apple: #ff8a5b;
+  --spotify: #1db954;
+  --accent: #e34262;
+  --shadow: 0 20px 60px rgba(73, 42, 18, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(255, 138, 91, 0.32), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(29, 185, 84, 0.18), transparent 28%),
+    linear-gradient(180deg, #f9f2e9 0%, var(--bg) 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(30, 26, 23, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 26, 23, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+.shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 40px;
+}
+
+.hero {
+  padding: 24px 8px 28px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font: 500 0.78rem/1.4 "IBM Plex Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.hero h1 {
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(2.6rem, 8vw, 5.4rem);
+  line-height: 0.95;
+}
+
+.lede {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.chips button,
+.secondary,
+.composer button {
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+.chips button {
+  padding: 10px 14px;
+  background: rgba(255, 250, 244, 0.88);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.chips button:hover,
+.secondary:hover,
+.composer button:hover {
+  transform: translateY(-1px);
+}
+
+.chat-panel {
+  display: grid;
+  grid-template-rows: auto minmax(320px, 1fr) auto;
+  min-height: 70vh;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.chat-header,
+.composer-footer {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.chat-header p,
+.composer-footer p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.secondary {
+  padding: 10px 14px;
+  background: rgba(30, 26, 23, 0.08);
+  color: var(--ink);
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 4px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: min(760px, 100%);
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+}
+
+.message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, rgba(227, 66, 98, 0.12), rgba(255, 138, 91, 0.16));
+}
+
+.message.assistant {
+  align-self: flex-start;
+}
+
+.message-role {
+  margin: 0 0 8px;
+  font: 500 0.78rem/1.4 "IBM Plex Mono", monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.message-body {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.composer {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 96px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 250, 244, 0.95);
+  font: inherit;
+  color: var(--ink);
+}
+
+textarea:focus {
+  outline: 2px solid rgba(227, 66, 98, 0.25);
+  outline-offset: 2px;
+}
+
+.composer-footer {
+  margin-top: 12px;
+}
+
+.composer button {
+  padding: 12px 18px;
+  background: var(--ink);
+  color: white;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    width: min(100% - 20px, 1120px);
+    padding-top: 20px;
+  }
+
+  .chat-panel {
+    min-height: 76vh;
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .chat-header,
+  .composer-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .composer button,
+  .secondary {
+    width: 100%;
+  }
+}
