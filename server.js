@@ -203,6 +203,71 @@ function sentenceCase(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+function lowerFirst(value) {
+  if (!value) return "";
+  return value.charAt(0).toLowerCase() + value.slice(1);
+}
+
+function formatNaturalList(items) {
+  return formatList((items || []).map((item) => lowerFirst(String(item || "").trim())).filter(Boolean));
+}
+
+function rewriteBulletAsFirstPerson(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+
+  const replacements = [
+    [/^Hates\b/i, "I hate"],
+    [/^Needs\b/i, "I need"],
+    [/^Gets\b/i, "I get"],
+    [/^Keeps\b/i, "I keep"],
+    [/^Enjoys\b/i, "I enjoy"],
+    [/^Pays\b/i, "I pay"],
+    [/^Listens\b/i, "I listen"],
+    [/^Buys\b/i, "I buy"],
+    [/^Exercises\b/i, "I exercise"],
+    [/^Curates\b/i, "I curate"],
+    [/^Starts\b/i, "I start"],
+    [/^Shares\b/i, "I share"],
+    [/^Actively seeks\b/i, "I actively seek"],
+    [/^Attends\b/i, "I attend"],
+    [/^Loves\b/i, "I love"],
+    [/^Wants\b/i, "I want"],
+    [/^Uses\b/i, "I use"],
+    [/^Mainly listens\b/i, "I mainly listen"],
+    [/^Rarely searches\b/i, "I rarely search"],
+    [/^Likes\b/i, "I like"],
+    [/^Lets\b/i, "I let"],
+    [/^Doesn[’']t know\b/i, "I don't know"],
+    [/^Doesn[’']t have\b/i, "I don't have"],
+    [/^Understanding\b/i, "Understanding"],
+    [/^Finding\b/i, "Finding"],
+    [/^Making\b/i, "Making"],
+    [/^Staying\b/i, "Staying"],
+    [/^Be seen\b/i, "Being seen"],
+    [/^Learn\b/i, "Learning"],
+    [/^Stay\b/i, "Staying"],
+    [/^Build\b/i, "Building"],
+    [/^Connect\b/i, "Connecting"],
+    [/^Access\b/i, "Having access"]
+  ];
+
+  for (const [pattern, replacement] of replacements) {
+    if (pattern.test(raw)) {
+      return raw.replace(pattern, replacement);
+    }
+  }
+
+  return lowerFirst(raw);
+}
+
+function joinAsSentences(items, fallbackIntro) {
+  const phrases = (items || []).map(rewriteBulletAsFirstPerson).filter(Boolean);
+  if (phrases.length === 0) return fallbackIntro;
+  if (phrases.length === 1) return `${sentenceCase(phrases[0])}.`;
+  return `${sentenceCase(phrases[0])}. ${phrases.slice(1).map((phrase) => `${sentenceCase(phrase)}.`).join(" ")}`;
+}
+
 function firstName(persona) {
   return persona.name.split(" ")[0];
 }
@@ -218,26 +283,25 @@ function findPeerFromQuestion(question, persona, knowledgeBase) {
 
 function answerAsPersona(message, persona, knowledgeBase) {
   const q = normalizeText(message);
-  const me = firstName(persona);
 
   if (q.includes("who are you") || q.includes("introduce") || q.includes("about yourself")) {
     return `I'm ${persona.name}. I'm ${persona.age}, I work as ${persona.job}, and I use ${persona.platform}. ${sentenceCase(persona.short_bio)}`;
   }
 
   if (q.includes("why") && (q.includes("spotify") || q.includes("apple") || q.includes("platform"))) {
-    return `I use ${persona.platform} because it fits what I care about most: ${formatList(persona.why_this_platform)}. That's what makes it feel right for me.`;
+    return `I use ${persona.platform} because it fits me well. What keeps me there is ${formatNaturalList(persona.why_this_platform)}.`;
   }
 
   if (q.includes("goal") || q.includes("want") || q.includes("trying") || q.includes("looking for")) {
-    return `What I want most is ${formatList(persona.goals)}. That's really what shapes how I listen.`;
+    return `What I want most is ${formatNaturalList(persona.goals)}. That's what shapes how I listen.`;
   }
 
   if (q.includes("pain") || q.includes("friction") || q.includes("annoy") || q.includes("hard") || q.includes("frustrat")) {
-    return `The most frustrating part for me is ${formatList(persona.pain_points)}. If an app gets in the way there, I notice it fast.`;
+    return `A few things frustrate me: ${formatNaturalList(persona.pain_points)}. If an app gets in the way there, I feel it right away.`;
   }
 
   if (q.includes("behavior") || q.includes("listen") || q.includes("usually") || q.includes("how do you use")) {
-    return `I usually listen in a pretty specific way. I ${persona.behaviors[0].charAt(0).toLowerCase()}${persona.behaviors[0].slice(1)}, and I also ${formatList(persona.behaviors.slice(1).map((item) => item.charAt(0).toLowerCase() + item.slice(1)))}.`;
+    return `I usually listen in a pretty specific way. ${joinAsSentences(persona.behaviors, "My habits are pretty consistent.")}`;
   }
 
   if (q.includes("compare")) {
