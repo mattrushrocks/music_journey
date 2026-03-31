@@ -5,17 +5,30 @@ const statusEl = document.querySelector("#status");
 const suggestionsEl = document.querySelector("#suggestions");
 const resetButton = document.querySelector("#resetButton");
 const template = document.querySelector("#messageTemplate");
+const personaGridEl = document.querySelector("#personaGrid");
+const chatTitleEl = document.querySelector("#chatTitle");
 
-const seedQuestions = [
+const generalSeedQuestions = [
   "What are the biggest differences between the Apple Music and Spotify personas?",
-  "Which persona had the most onboarding friction?",
-  "What design opportunities came out of the journey map?",
-  "Summarize the Apple Music personas for me.",
-  "What patterns showed up across both platforms?"
+  "Where does the journey map show the biggest friction?",
+  "Which persona cares most about audio quality?",
+  "What patterns showed up across the five personas?"
 ];
 
 let chatHistory = [];
 let isSending = false;
+let personas = [];
+let selectedPersona = null;
+
+function getPersonaQuestions(persona) {
+  const firstName = persona.name.split(" ")[0];
+  return [
+    `Hi ${firstName}, can you introduce yourself?`,
+    `Why do you use ${persona.platform}?`,
+    `What frustrates you most about music apps?`,
+    `What are you trying to get out of listening?`
+  ];
+}
 
 function addMessage(role, text) {
   const fragment = template.content.cloneNode(true);
@@ -24,7 +37,11 @@ function addMessage(role, text) {
   const bodyEl = fragment.querySelector(".message-body");
 
   article.classList.add(role);
-  roleEl.textContent = role === "assistant" ? "Project Agent" : "You";
+  roleEl.textContent = role === "assistant"
+    ? selectedPersona
+      ? selectedPersona.name
+      : "Project Agent"
+    : "You";
   bodyEl.textContent = text;
   messagesEl.appendChild(fragment);
   messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -35,7 +52,10 @@ function setStatus(text) {
 }
 
 function renderSuggestions() {
-  seedQuestions.forEach((question) => {
+  suggestionsEl.innerHTML = "";
+  const questions = selectedPersona ? getPersonaQuestions(selectedPersona) : generalSeedQuestions;
+
+  questions.forEach((question) => {
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = question;
@@ -47,15 +67,53 @@ function renderSuggestions() {
   });
 }
 
+function renderPersonas() {
+  personaGridEl.innerHTML = "";
+
+  personas.forEach((persona) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "persona-card";
+    if (selectedPersona?.id === persona.id) {
+      button.classList.add("is-active");
+    }
+
+    button.innerHTML = `
+      <span class="persona-platform">${persona.platform}</span>
+      <strong>${persona.name}</strong>
+      <span>${persona.role}</span>
+    `;
+
+    button.addEventListener("click", () => {
+      selectedPersona = persona;
+      chatHistory = [];
+      messagesEl.innerHTML = "";
+      chatTitleEl.textContent = `${persona.name} Conversation`;
+      addMessage(
+        "assistant",
+        `You're now talking with ${persona.name}, "${persona.role}." Ask a question and I'll answer in their voice based on the exhibit research.`
+      );
+      setStatus("Persona mode is active.");
+      renderPersonas();
+      renderSuggestions();
+    });
+
+    personaGridEl.appendChild(button);
+  });
+}
+
 async function checkHealth() {
   try {
     const response = await fetch("/api/health");
     const data = await response.json();
     if (data.ok) {
+      personas = Array.isArray(data.personas) ? data.personas : [];
+      renderPersonas();
+      renderSuggestions();
       setStatus(
         data.hasApiKey
-          ? "Ready for questions."
-          : "Free mode is active with local project answers."
+          ? "Ready for persona conversations."
+          : "Free persona mode is active."
       );
     } else {
       setStatus("Server is running, but setup still needs attention.");
@@ -81,7 +139,8 @@ async function sendMessage(message) {
       },
       body: JSON.stringify({
         message,
-        history: chatHistory
+        history: chatHistory,
+        personaId: selectedPersona?.id || ""
       })
     });
 
@@ -93,12 +152,9 @@ async function sendMessage(message) {
 
     addMessage("assistant", data.reply);
     chatHistory.push({ role: "assistant", content: data.reply });
-    setStatus("Ready for questions.");
+    setStatus(selectedPersona ? `Talking with ${selectedPersona.name}.` : "Ready for questions.");
   } catch (error) {
-    addMessage(
-      "assistant",
-      `I hit a setup issue: ${error.message}`
-    );
+    addMessage("assistant", `I hit a setup issue: ${error.message}`);
     setStatus("Setup issue detected.");
   } finally {
     isSending = false;
@@ -118,14 +174,15 @@ resetButton.addEventListener("click", () => {
   messagesEl.innerHTML = "";
   addMessage(
     "assistant",
-    "Fresh chat started. Ask me about personas, pain points, comparisons, or what your journey map reveals."
+    selectedPersona
+      ? `Fresh chat started with ${selectedPersona.name}. Ask about goals, frustrations, habits, or why this platform fits them.`
+      : "Fresh chat started. Pick a persona above, or ask about the overall project."
   );
-  setStatus("Ready for questions.");
+  setStatus(selectedPersona ? `Talking with ${selectedPersona.name}.` : "Ready for questions.");
 });
 
-renderSuggestions();
 addMessage(
   "assistant",
-  "Ask me anything about the Apple Music and Spotify personas, your assignments, or the journey map."
+  "Pick a persona above to start a first-person conversation, or ask about the overall project and journey map."
 );
 checkHealth();

@@ -77,6 +77,34 @@ function buildInstructions(knowledgeBase) {
   ].join("\n");
 }
 
+function slugifyPersonaName(name) {
+  return normalizeText(name).replace(/\s+/g, "-");
+}
+
+function getAllPersonas(knowledgeBase) {
+  return [
+    ...knowledgeBase.personas.apple_music,
+    ...knowledgeBase.personas.spotify
+  ].map((persona) => ({
+    ...persona,
+    id: slugifyPersonaName(persona.name)
+  }));
+}
+
+function buildPersonaInstructions(knowledgeBase, persona) {
+  return [
+    `You are roleplaying as ${persona.name}, whose persona card appears in a student research exhibit.`,
+    `Speak in first person as ${persona.name}, but only using facts grounded in the persona and journey-map material.`,
+    "Do not invent extra biography, memories, or experiences beyond the provided material.",
+    "If asked something outside the persona card or journey map, say that the exhibit materials do not tell us that directly.",
+    "Keep the tone natural, short, and conversational, like a visitor is talking to the persona at a gallery installation.",
+    "Occasionally reference motivations, pain points, behaviors, and platform fit from the source material.",
+    "",
+    "PROJECT MATERIAL:",
+    JSON.stringify(knowledgeBase, null, 2)
+  ].join("\n");
+}
+
 function toInputItems(history, message) {
   const trimmedHistory = Array.isArray(history) ? history.slice(-10) : [];
   const historyItems = trimmedHistory
@@ -161,12 +189,55 @@ function formatPersona(persona) {
   ].join("\n");
 }
 
-function answerWithKnowledgeBase(message, knowledgeBase) {
+function answerAsPersona(message, persona, knowledgeBase) {
   const q = normalizeText(message);
-  const personas = [
-    ...knowledgeBase.personas.apple_music,
-    ...knowledgeBase.personas.spotify
-  ];
+  const replies = [];
+
+  if (q.includes("who are you") || q.includes("introduce") || q.includes("about yourself")) {
+    replies.push(
+      `I'm ${persona.name}. I'm ${persona.age}, I work as ${persona.job}, and I use ${persona.platform}.`
+    );
+    replies.push(persona.short_bio);
+  } else if (q.includes("why") && (q.includes("spotify") || q.includes("apple"))) {
+    replies.push(`I stick with ${persona.platform} because ${persona.why_this_platform.join(", ").toLowerCase()}.`);
+  } else if (q.includes("goal") || q.includes("want") || q.includes("trying")) {
+    replies.push(`What I'm really looking for is ${persona.goals.join(", ").toLowerCase()}.`);
+  } else if (q.includes("pain") || q.includes("friction") || q.includes("annoy") || q.includes("hard")) {
+    replies.push(`What frustrates me most is ${persona.pain_points.join(", ").toLowerCase()}.`);
+  } else if (q.includes("behavior") || q.includes("listen") || q.includes("use music") || q.includes("use spotify") || q.includes("use apple")) {
+    replies.push(`The way I usually use it is pretty consistent: ${persona.behaviors.join(", ").toLowerCase()}.`);
+  } else if (q.includes("compare")) {
+    const peers = getAllPersonas(knowledgeBase).filter((candidate) => candidate.id !== slugifyPersonaName(persona.name));
+    const peer = peers.find((candidate) => q.includes(normalizeText(candidate.name.split(" ")[0]))) || peers[0];
+    replies.push(`Compared with ${peer.name}, I come across as more focused on ${persona.motivations[0].toLowerCase()} and ${persona.platform}.`);
+    replies.push(`My card emphasizes ${persona.pain_points[0].toLowerCase()}, while ${peer.name}'s profile is more about ${peer.motivations[0].toLowerCase()}.`);
+  } else if (q.includes("journey") || q.includes("map")) {
+    if (persona.platform === "Apple Music") {
+      replies.push(`From my point of view, the biggest Apple Music tension is around ${knowledgeBase.project.journey_map_overview.key_takeaways[3].toLowerCase()}.`);
+      replies.push(`The exhibit also shows trust staying high when the system feels seamless and quality stays consistent.`);
+    } else {
+      replies.push("The journey map in this exhibit is specifically for Apple Music, so it isn't a direct map of my platform.");
+      replies.push(`But my persona still connects to it through needs like ${persona.motivations.join(", ").toLowerCase()}.`);
+    }
+  } else {
+    replies.push(`If I answered from my persona card, I'd say ${persona.short_bio.charAt(0).toLowerCase()}${persona.short_bio.slice(1)}`);
+    replies.push(`What matters most to me is ${persona.motivations.join(", ").toLowerCase()}.`);
+  }
+
+  replies.push("I'm answering from the exhibit persona, so there are some things the project materials don't tell us directly.");
+  return replies.join("\n\n");
+}
+
+function answerWithKnowledgeBase(message, knowledgeBase, personaId) {
+  const q = normalizeText(message);
+  const personas = getAllPersonas(knowledgeBase);
+
+  if (personaId) {
+    const persona = personas.find((candidate) => candidate.id === personaId);
+    if (persona) {
+      return answerAsPersona(message, persona, knowledgeBase);
+    }
+  }
 
   const namedPersona = personas.find((persona) =>
     q.includes(normalizeText(persona.name.split(" ")[0])) || q.includes(normalizeText(persona.name))
@@ -261,7 +332,13 @@ const server = createServer(async (request, response) => {
       return sendJson(request, response, 200, {
         ok: true,
         hasApiKey: Boolean(process.env.OPENAI_API_KEY),
-        model: process.env.OPENAI_MODEL || "gpt-5-mini"
+        model: process.env.OPENAI_MODEL || "gpt-5-mini",
+        personas: getAllPersonas(await loadKnowledgeBase()).map((persona) => ({
+          id: persona.id,
+          name: persona.name,
+          role: persona.role_or_identity,
+          platform: persona.platform
+        }))
       });
     }
 
@@ -274,17 +351,23 @@ const server = createServer(async (request, response) => {
       }
 
       const knowledgeBase = await loadKnowledgeBase();
+      const personaId = typeof body.personaId === "string" ? body.personaId : "";
       let reply;
 
       if (process.env.OPENAI_API_KEY) {
-        const instructions = buildInstructions(knowledgeBase);
+        const persona = personaId
+          ? getAllPersonas(knowledgeBase).find((candidate) => candidate.id === personaId)
+          : null;
+        const instructions = persona
+          ? buildPersonaInstructions(knowledgeBase, persona)
+          : buildInstructions(knowledgeBase);
         reply = await fetchOpenAIReply({
           instructions,
           history: body.history,
           message
         });
       } else {
-        reply = answerWithKnowledgeBase(message, knowledgeBase);
+        reply = answerWithKnowledgeBase(message, knowledgeBase, personaId);
       }
 
       return sendJson(request, response, 200, { reply });

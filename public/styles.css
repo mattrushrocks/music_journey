@@ -78,6 +78,57 @@ body::before {
   margin-top: 22px;
 }
 
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.persona-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 124px;
+  padding: 16px;
+  text-align: left;
+  border: 1px solid rgba(30, 26, 23, 0.08);
+  border-radius: 22px;
+  background: rgba(255, 250, 244, 0.84);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.persona-card:hover {
+  transform: translateY(-2px);
+}
+
+.persona-card.is-active {
+  border-color: rgba(227, 66, 98, 0.45);
+  background: linear-gradient(135deg, rgba(227, 66, 98, 0.12), rgba(255, 138, 91, 0.12));
+}
+
+.persona-card strong {
+  font-size: 1rem;
+}
+
+.persona-card span:last-child {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.persona-platform {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(30, 26, 23, 0.07);
+  font: 500 0.72rem/1 "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 .chips button,
 .secondary,
 .composer button {
@@ -233,6 +284,10 @@ textarea:focus {
     border-radius: 22px;
   }
 
+  .persona-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .chat-header,
   .composer-footer {
     align-items: flex-start;
@@ -242,5 +297,11 @@ textarea:focus {
   .composer button,
   .secondary {
     width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .persona-grid {
+    grid-template-columns: 1fr;
   }
 }

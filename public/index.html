@@ -16,18 +16,19 @@
     <div class="shell">
       <section class="hero">
         <p class="eyebrow">QR Conversation Companion</p>
-        <h1>Ask about the Apple Music and Spotify personas.</h1>
+        <h1>Choose a persona and hear the research talk back.</h1>
         <p class="lede">
-          This agent extends the printed journey map. Visitors can ask about personas,
-          friction points, patterns, assignments, and the larger story behind the work.
+          This page extends the printed journey map. Pick one of the five personas and ask
+          questions as if you were talking directly with them.
         </p>
+        <div class="persona-grid" id="personaGrid" aria-label="Persona picker"></div>
         <div class="chips" id="suggestions"></div>
       </section>
 
       <section class="chat-panel">
         <div class="chat-header">
           <div>
-            <h2>Project Agent</h2>
+            <h2 id="chatTitle">Persona Conversation</h2>
             <p id="status">Checking connection...</p>
           </div>
           <button id="resetButton" class="secondary">New chat</button>

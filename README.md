@@ -6,13 +6,14 @@ and what the journey map reveals.
 
 The app has two modes:
 
-- Free mode: works with no API key and answers using your local project data
+- Free mode: works with no API key and answers using your local project data, including persona-style first-person replies
 - AI mode: uses the OpenAI Responses API for more flexible natural-language answers
 
 ## What is included
 
 - A lightweight Node server with no external dependencies
 - A mobile-friendly chat interface for QR visitors
+- A persona picker so visitors can chat with Franklin, Brayden, Brandon, Reid, or Sheila
 - A local knowledge file for your personas, assignments, and journey-map insights
 - A QR generation script that saves an SVG you can place on the print layout
 
