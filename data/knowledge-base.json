@@ -57,6 +57,125 @@
           "Recover"
         ]
       },
+      "emotion_profiles": {
+        "threshold": 5.2,
+        "reid": {
+          "display_name": "Reid Madsen",
+          "role": "The Audiophile",
+          "metric": "Interest",
+          "accent": "#ff8a24",
+          "stages": [
+            {
+              "label": "Platform Relationship",
+              "value": 6.1,
+              "note": "High baseline because audio quality matters immediately."
+            },
+            {
+              "label": "Trigger Moment",
+              "value": 6.0,
+              "note": "Curate The Best Experience"
+            },
+            {
+              "label": "Entry Point",
+              "value": 5.4,
+              "note": "Expects Consistency"
+            },
+            {
+              "label": "Content Selection",
+              "value": 6.3,
+              "note": "More invested when format choices feel rich."
+            },
+            {
+              "label": "Playback Experience",
+              "value": 7.8,
+              "note": "Diversity in available formats"
+            },
+            {
+              "label": "Cross Context Use",
+              "value": 4.4,
+              "note": "Lack of Control"
+            },
+            {
+              "label": "Maintenance Over Time",
+              "value": 4.9,
+              "note": "Control issues and complexity drag the feeling down."
+            },
+            {
+              "label": "Success State",
+              "value": 6.9,
+              "note": "Listening to Quality Music"
+            },
+            {
+              "label": "Failure State",
+              "value": 4.1,
+              "note": "Inconsistency with output devices"
+            },
+            {
+              "label": "Experience Takeaway",
+              "value": 5.8,
+              "note": "Quality Settings Configured"
+            }
+          ]
+        },
+        "sheila": {
+          "display_name": "Sheila Applegate",
+          "role": "The Apple Loyalist",
+          "metric": "Trust",
+          "accent": "#ff5b8a",
+          "stages": [
+            {
+              "label": "Platform Relationship",
+              "value": 6.7,
+              "note": "Starts with trust because the ecosystem already feels familiar."
+            },
+            {
+              "label": "Trigger Moment",
+              "value": 6.9,
+              "note": "Comfort builds when the system feels familiar."
+            },
+            {
+              "label": "Entry Point",
+              "value": 7.5,
+              "note": "Seamless continuity strengthens confidence."
+            },
+            {
+              "label": "Content Selection",
+              "value": 6.3,
+              "note": "Expects Consistency"
+            },
+            {
+              "label": "Playback Experience",
+              "value": 7.0,
+              "note": "Ease of Ecosystem"
+            },
+            {
+              "label": "Cross Context Use",
+              "value": 6.7,
+              "note": "Cross-device flow still feels dependable here."
+            },
+            {
+              "label": "Maintenance Over Time",
+              "value": 3.6,
+              "note": "Extreme UI Overhaul"
+            },
+            {
+              "label": "Success State",
+              "value": 5.8,
+              "note": "Trust starts to recover once things feel stable again."
+            },
+            {
+              "label": "Failure State",
+              "value": 5.0,
+              "note": "Difficulty Adapting"
+            },
+            {
+              "label": "Experience Takeaway",
+              "value": 6.9,
+              "note": "Requires Little Effort"
+            }
+          ]
+        }
+      },
       "stage_insights": [
         {
           "stage": "Platform Relationship",

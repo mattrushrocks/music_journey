@@ -63,6 +63,22 @@ async function loadKnowledgeBase() {
   return JSON.parse(raw);
 }
 
+function buildHealthPayload(knowledgeBase) {
+  return {
+    ok: true,
+    hasApiKey: Boolean(process.env.OPENAI_API_KEY),
+    model: process.env.OPENAI_MODEL || "gpt-5-mini",
+    personas: getAllPersonas(knowledgeBase).map((persona) => ({
+      id: persona.id,
+      name: persona.name,
+      role: persona.role_or_identity,
+      platform: persona.platform
+    })),
+    journeyGraph: knowledgeBase.project?.journey_map_overview?.emotion_profiles || null,
+    journeyStages: knowledgeBase.project?.journey_map_overview?.stages || []
+  };
+}
+
 function buildInstructions(knowledgeBase) {
   return [
     "You are a warm, concise museum-style project companion for a student research exhibit.",
@@ -427,17 +443,8 @@ const PORT = Number(process.env.PORT || 3000);
 const server = createServer(async (request, response) => {
   try {
     if ((request.method === "GET" || request.method === "HEAD") && request.url === "/api/health") {
-      return sendJson(request, response, 200, {
-        ok: true,
-        hasApiKey: Boolean(process.env.OPENAI_API_KEY),
-        model: process.env.OPENAI_MODEL || "gpt-5-mini",
-        personas: getAllPersonas(await loadKnowledgeBase()).map((persona) => ({
-          id: persona.id,
-          name: persona.name,
-          role: persona.role_or_identity,
-          platform: persona.platform
-        }))
-      });
+      const knowledgeBase = await loadKnowledgeBase();
+      return sendJson(request, response, 200, buildHealthPayload(knowledgeBase));
     }
 
     if (request.method === "POST" && request.url === "/api/chat") {
