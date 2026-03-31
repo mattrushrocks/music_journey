@@ -52,7 +52,11 @@ async function checkHealth() {
     const response = await fetch("/api/health");
     const data = await response.json();
     if (data.ok) {
-      setStatus(data.hasApiKey ? "Ready for questions." : "Add OPENAI_API_KEY to enable live answers.");
+      setStatus(
+        data.hasApiKey
+          ? "Ready for questions."
+          : "Free mode is active with local project answers."
+      );
     } else {
       setStatus("Server is running, but setup still needs attention.");
     }
@@ -93,7 +97,7 @@ async function sendMessage(message) {
   } catch (error) {
     addMessage(
       "assistant",
-      `I hit a setup issue: ${error.message} Check the README and confirm your API key is set.`
+      `I hit a setup issue: ${error.message}`
     );
     setStatus("Setup issue detected.");
   } finally {

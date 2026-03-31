@@ -133,6 +133,104 @@ async function fetchOpenAIReply({ instructions, history, message }) {
   throw new Error("The model returned an empty response.");
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function scoreText(haystack, needles) {
+  const text = normalizeText(haystack);
+  return needles.reduce((score, needle) => {
+    if (!needle) return score;
+    return text.includes(needle) ? score + 1 : score;
+  }, 0);
+}
+
+function formatPersona(persona) {
+  return [
+    `${persona.name} (${persona.role_or_identity}, ${persona.platform})`,
+    `Age: ${persona.age}`,
+    `Job: ${persona.job}`,
+    `Bio: ${persona.short_bio}`,
+    `Goals: ${persona.goals.join("; ")}`,
+    `Pain points: ${persona.pain_points.join("; ")}`,
+    `Why this platform: ${persona.why_this_platform.join("; ")}`
+  ].join("\n");
+}
+
+function answerWithKnowledgeBase(message, knowledgeBase) {
+  const q = normalizeText(message);
+  const personas = [
+    ...knowledgeBase.personas.apple_music,
+    ...knowledgeBase.personas.spotify
+  ];
+
+  const namedPersona = personas.find((persona) =>
+    q.includes(normalizeText(persona.name.split(" ")[0])) || q.includes(normalizeText(persona.name))
+  );
+
+  if (namedPersona) {
+    return `${formatPersona(namedPersona)}\n\nIf you want, ask me to compare ${namedPersona.name.split(" ")[0]} with another persona.`;
+  }
+
+  if (q.includes("compare") || q.includes("difference") || q.includes("spotify") || q.includes("apple music")) {
+    return [
+      "Here’s the clearest comparison from your materials:",
+      "",
+      `Spotify personas: ${knowledgeBase.comparative_insights[0]}`,
+      `Apple Music personas: ${knowledgeBase.comparative_insights[1]}`,
+      knowledgeBase.comparative_insights[2],
+      knowledgeBase.comparative_insights[3],
+      knowledgeBase.comparative_insights[4]
+    ].join("\n");
+  }
+
+  if (q.includes("journey") || q.includes("map") || q.includes("friction") || q.includes("stage")) {
+    const topStages = knowledgeBase.project.journey_map_overview.stage_insights
+      .filter((stage) => stage.frictions.length > 0)
+      .slice(0, 4)
+      .map((stage) => `- ${stage.stage}: ${stage.frictions.join("; ")}`)
+      .join("\n");
+
+    return [
+      "The Apple Music journey map shows friction clustering around these moments:",
+      topStages,
+      "",
+      "Big pattern: trust stays high when Apple Music feels seamless across devices and transparent about quality, but drops quickly when continuity or audio confidence breaks."
+    ].join("\n");
+  }
+
+  if (q.includes("all personas") || q.includes("personas") || q.includes("who are")) {
+    return [
+      "The five personas in this project are:",
+      ...personas.map((persona) => `- ${persona.name}: ${persona.role_or_identity} on ${persona.platform}`)
+    ].join("\n");
+  }
+
+  const scored = personas
+    .map((persona) => {
+      const haystack = JSON.stringify(persona);
+      return { persona, score: scoreText(haystack, q.split(" ")) };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  if (scored[0] && scored[0].score > 1) {
+    return `${formatPersona(scored[0].persona)}\n\nThis seems like the closest match to your question based on the project material.`;
+  }
+
+  return [
+    "I can answer from the five personas and the Apple Music journey map loaded into this project.",
+    "Try asking something like:",
+    "- Compare Apple Music and Spotify personas",
+    "- Which persona cares most about audio quality?",
+    "- Where does the journey map show the biggest friction?",
+    "- Tell me about Franklin, Brayden, Brandon, Reid, or Sheila"
+  ].join("\n");
+}
+
 async function serveStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
   const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
@@ -176,12 +274,18 @@ const server = createServer(async (request, response) => {
       }
 
       const knowledgeBase = await loadKnowledgeBase();
-      const instructions = buildInstructions(knowledgeBase);
-      const reply = await fetchOpenAIReply({
-        instructions,
-        history: body.history,
-        message
-      });
+      let reply;
+
+      if (process.env.OPENAI_API_KEY) {
+        const instructions = buildInstructions(knowledgeBase);
+        reply = await fetchOpenAIReply({
+          instructions,
+          history: body.history,
+          message
+        });
+      } else {
+        reply = answerWithKnowledgeBase(message, knowledgeBase);
+      }
 
       return sendJson(request, response, 200, { reply });
     }

@@ -4,6 +4,11 @@ This project gives your printed Apple Music and Spotify journey map a live conve
 People scan a QR code, open a chat page, and ask about personas, research patterns, assignments,
 and what the journey map reveals.
 
+The app has two modes:
+
+- Free mode: works with no API key and answers using your local project data
+- AI mode: uses the OpenAI Responses API for more flexible natural-language answers
+
 ## What is included
 
 - A lightweight Node server with no external dependencies
@@ -20,9 +25,9 @@ and what the journey map reveals.
 
 ## Setup
 
-1. Copy `.env.example` to `.env`.
-2. Add your OpenAI API key to `.env`.
-3. Fill in `data/knowledge-base.json` with your real personas, assignment summary, and journey-map notes.
+1. Fill in `data/knowledge-base.json` with your real personas, assignment summary, and journey-map notes.
+2. Optional: copy `.env.example` to `.env`.
+3. Optional: add your OpenAI API key to `.env` if you want AI mode.
 4. Start the app:
 
 ```bash
@@ -33,7 +38,7 @@ npm start
 
 ## Environment variables
 
-- `OPENAI_API_KEY` is required for live chat
+- `OPENAI_API_KEY` is optional
 - `OPENAI_MODEL` defaults to `gpt-5-mini`
 - `PORT` defaults to `3000`
 
@@ -61,6 +66,8 @@ requiring any serverless rewrites.
 ```bash
 OPENAI_API_KEY=your_real_key_here
 ```
+
+This step is optional. If you leave it out, the site still works in free mode.
 
 5. Deploy the service.
 6. After Render gives you the live URL, generate the QR code:
