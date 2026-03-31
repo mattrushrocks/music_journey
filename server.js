@@ -93,12 +93,13 @@ function getAllPersonas(knowledgeBase) {
 
 function buildPersonaInstructions(knowledgeBase, persona) {
   return [
-    `You are roleplaying as ${persona.name}, whose persona card appears in a student research exhibit.`,
-    `Speak in first person as ${persona.name}, but only using facts grounded in the persona and journey-map material.`,
-    "Do not invent extra biography, memories, or experiences beyond the provided material.",
-    "If asked something outside the persona card or journey map, say that the exhibit materials do not tell us that directly.",
-    "Keep the tone natural, short, and conversational, like a visitor is talking to the persona at a gallery installation.",
-    "Occasionally reference motivations, pain points, behaviors, and platform fit from the source material.",
+    `You are ${persona.name}. Speak in first person, as if the user is directly talking with you.`,
+    "Base every answer only on the provided research material.",
+    "Do not mention persona cards, exhibits, source material, or research documents unless the user explicitly asks about them.",
+    "Do not invent extra memories, relationships, or life events beyond the provided material.",
+    "If something is not known, answer naturally and briefly say you cannot really speak to that.",
+    "Keep the voice conversational, polished, and grammatically clean.",
+    "Prefer short paragraphs over bullet lists unless the user asks for a list.",
     "",
     "PROJECT MATERIAL:",
     JSON.stringify(knowledgeBase, null, 2)
@@ -189,43 +190,76 @@ function formatPersona(persona) {
   ].join("\n");
 }
 
+function formatList(items) {
+  const clean = (items || []).filter(Boolean);
+  if (clean.length === 0) return "";
+  if (clean.length === 1) return clean[0];
+  if (clean.length === 2) return `${clean[0]} and ${clean[1]}`;
+  return `${clean.slice(0, -1).join(", ")}, and ${clean[clean.length - 1]}`;
+}
+
+function sentenceCase(value) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function firstName(persona) {
+  return persona.name.split(" ")[0];
+}
+
+function findPeerFromQuestion(question, persona, knowledgeBase) {
+  return getAllPersonas(knowledgeBase)
+    .filter((candidate) => candidate.id !== persona.id)
+    .find((candidate) => {
+      const shortName = normalizeText(firstName(candidate));
+      return question.includes(shortName) || question.includes(normalizeText(candidate.name));
+    });
+}
+
 function answerAsPersona(message, persona, knowledgeBase) {
   const q = normalizeText(message);
-  const replies = [];
+  const me = firstName(persona);
 
   if (q.includes("who are you") || q.includes("introduce") || q.includes("about yourself")) {
-    replies.push(
-      `I'm ${persona.name}. I'm ${persona.age}, I work as ${persona.job}, and I use ${persona.platform}.`
-    );
-    replies.push(persona.short_bio);
-  } else if (q.includes("why") && (q.includes("spotify") || q.includes("apple"))) {
-    replies.push(`I stick with ${persona.platform} because ${persona.why_this_platform.join(", ").toLowerCase()}.`);
-  } else if (q.includes("goal") || q.includes("want") || q.includes("trying")) {
-    replies.push(`What I'm really looking for is ${persona.goals.join(", ").toLowerCase()}.`);
-  } else if (q.includes("pain") || q.includes("friction") || q.includes("annoy") || q.includes("hard")) {
-    replies.push(`What frustrates me most is ${persona.pain_points.join(", ").toLowerCase()}.`);
-  } else if (q.includes("behavior") || q.includes("listen") || q.includes("use music") || q.includes("use spotify") || q.includes("use apple")) {
-    replies.push(`The way I usually use it is pretty consistent: ${persona.behaviors.join(", ").toLowerCase()}.`);
-  } else if (q.includes("compare")) {
-    const peers = getAllPersonas(knowledgeBase).filter((candidate) => candidate.id !== slugifyPersonaName(persona.name));
-    const peer = peers.find((candidate) => q.includes(normalizeText(candidate.name.split(" ")[0]))) || peers[0];
-    replies.push(`Compared with ${peer.name}, I come across as more focused on ${persona.motivations[0].toLowerCase()} and ${persona.platform}.`);
-    replies.push(`My card emphasizes ${persona.pain_points[0].toLowerCase()}, while ${peer.name}'s profile is more about ${peer.motivations[0].toLowerCase()}.`);
-  } else if (q.includes("journey") || q.includes("map")) {
-    if (persona.platform === "Apple Music") {
-      replies.push(`From my point of view, the biggest Apple Music tension is around ${knowledgeBase.project.journey_map_overview.key_takeaways[3].toLowerCase()}.`);
-      replies.push(`The exhibit also shows trust staying high when the system feels seamless and quality stays consistent.`);
-    } else {
-      replies.push("The journey map in this exhibit is specifically for Apple Music, so it isn't a direct map of my platform.");
-      replies.push(`But my persona still connects to it through needs like ${persona.motivations.join(", ").toLowerCase()}.`);
-    }
-  } else {
-    replies.push(`If I answered from my persona card, I'd say ${persona.short_bio.charAt(0).toLowerCase()}${persona.short_bio.slice(1)}`);
-    replies.push(`What matters most to me is ${persona.motivations.join(", ").toLowerCase()}.`);
+    return `I'm ${persona.name}. I'm ${persona.age}, I work as ${persona.job}, and I use ${persona.platform}. ${sentenceCase(persona.short_bio)}`;
   }
 
-  replies.push("I'm answering from the exhibit persona, so there are some things the project materials don't tell us directly.");
-  return replies.join("\n\n");
+  if (q.includes("why") && (q.includes("spotify") || q.includes("apple") || q.includes("platform"))) {
+    return `I use ${persona.platform} because it fits what I care about most: ${formatList(persona.why_this_platform)}. That's what makes it feel right for me.`;
+  }
+
+  if (q.includes("goal") || q.includes("want") || q.includes("trying") || q.includes("looking for")) {
+    return `What I want most is ${formatList(persona.goals)}. That's really what shapes how I listen.`;
+  }
+
+  if (q.includes("pain") || q.includes("friction") || q.includes("annoy") || q.includes("hard") || q.includes("frustrat")) {
+    return `The most frustrating part for me is ${formatList(persona.pain_points)}. If an app gets in the way there, I notice it fast.`;
+  }
+
+  if (q.includes("behavior") || q.includes("listen") || q.includes("usually") || q.includes("how do you use")) {
+    return `I usually listen in a pretty specific way. I ${persona.behaviors[0].charAt(0).toLowerCase()}${persona.behaviors[0].slice(1)}, and I also ${formatList(persona.behaviors.slice(1).map((item) => item.charAt(0).toLowerCase() + item.slice(1)))}.`;
+  }
+
+  if (q.includes("compare")) {
+    const peer = findPeerFromQuestion(q, persona, knowledgeBase);
+    if (peer) {
+      return `Compared with ${peer.name}, I come across as more focused on ${formatList(persona.motivations)}. ${peer.name} feels more driven by ${formatList(peer.motivations)}.`;
+    }
+    return `Compared with the others, I stand out most for ${formatList(persona.motivations)}. That's the clearest difference in how I relate to music and my platform.`;
+  }
+
+  if (q.includes("journey") || q.includes("map")) {
+    if (persona.platform === "Apple Music") {
+      return `From my perspective, the biggest tension is when Apple Music stops feeling seamless. If continuity breaks or the quality feels inconsistent, trust drops fast.`;
+    }
+    return `That map is really centered on Apple Music, so I can't fully speak for it as my own experience. But the parts that still connect with me are things like ${formatList(persona.motivations)} and how the platform fits into everyday life.`;
+  }
+
+  if (q.includes("music") || q.includes("taste") || q.includes("what matters")) {
+    return `For me, music is really about ${formatList(persona.motivations)}. That's why I use it the way I do.`;
+  }
+
+  return `I'd put it this way: ${sentenceCase(persona.short_bio)} What matters most to me is ${formatList(persona.motivations)}.`;
 }
 
 function answerWithKnowledgeBase(message, knowledgeBase, personaId) {

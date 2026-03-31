@@ -20,6 +20,15 @@ let isSending = false;
 let personas = [];
 let selectedPersona = null;
 
+function themeNameForPersona(persona) {
+  if (!persona) return "neutral";
+  return persona.platform === "Apple Music" ? "apple" : "spotify";
+}
+
+function applyTheme() {
+  document.body.dataset.theme = themeNameForPersona(selectedPersona);
+}
+
 function getPersonaQuestions(persona) {
   const firstName = persona.name.split(" ")[0];
   return [
@@ -74,6 +83,7 @@ function renderPersonas() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "persona-card";
+    button.dataset.platform = themeNameForPersona(persona);
     if (selectedPersona?.id === persona.id) {
       button.classList.add("is-active");
     }
@@ -91,9 +101,10 @@ function renderPersonas() {
       chatTitleEl.textContent = `${persona.name} Conversation`;
       addMessage(
         "assistant",
-        `You're now talking with ${persona.name}, "${persona.role}." Ask a question and I'll answer in their voice based on the exhibit research.`
+        `You're now talking with ${persona.name}. Ask a question, and I'll answer the way they would.`
       );
       setStatus("Persona mode is active.");
+      applyTheme();
       renderPersonas();
       renderSuggestions();
     });
@@ -108,6 +119,7 @@ async function checkHealth() {
     const data = await response.json();
     if (data.ok) {
       personas = Array.isArray(data.personas) ? data.personas : [];
+      applyTheme();
       renderPersonas();
       renderSuggestions();
       setStatus(
@@ -185,4 +197,5 @@ addMessage(
   "assistant",
   "Pick a persona above to start a first-person conversation, or ask about the overall project and journey map."
 );
+applyTheme();
 checkHealth();

@@ -10,6 +10,12 @@
   --spotify: #1db954;
   --accent: #e34262;
   --shadow: 0 20px 60px rgba(73, 42, 18, 0.12);
+  --hero-top: rgba(255, 138, 91, 0.32);
+  --hero-bottom: rgba(29, 185, 84, 0.18);
+  --user-bubble-a: rgba(227, 66, 98, 0.12);
+  --user-bubble-b: rgba(255, 138, 91, 0.16);
+  --active-card-a: rgba(227, 66, 98, 0.12);
+  --active-card-b: rgba(255, 138, 91, 0.12);
 }
 
 * {
@@ -22,9 +28,38 @@ body {
   font-family: "Space Grotesk", sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(circle at top left, rgba(255, 138, 91, 0.32), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(29, 185, 84, 0.18), transparent 28%),
+    radial-gradient(circle at top left, var(--hero-top), transparent 30%),
+    radial-gradient(circle at bottom right, var(--hero-bottom), transparent 28%),
     linear-gradient(180deg, #f9f2e9 0%, var(--bg) 100%);
+}
+
+body[data-theme="apple"] {
+  --bg: #f8efe7;
+  --panel: rgba(255, 247, 243, 0.86);
+  --panel-strong: rgba(255, 248, 244, 0.97);
+  --accent: #f4516c;
+  --hero-top: rgba(255, 108, 92, 0.34);
+  --hero-bottom: rgba(255, 170, 126, 0.2);
+  --user-bubble-a: rgba(244, 81, 108, 0.14);
+  --user-bubble-b: rgba(255, 144, 94, 0.16);
+  --active-card-a: rgba(244, 81, 108, 0.14);
+  --active-card-b: rgba(255, 144, 94, 0.14);
+}
+
+body[data-theme="spotify"] {
+  --bg: #edf5ef;
+  --panel: rgba(244, 252, 246, 0.86);
+  --panel-strong: rgba(248, 255, 249, 0.97);
+  --ink: #102017;
+  --muted: #4d6254;
+  --line: rgba(16, 32, 23, 0.12);
+  --accent: #1db954;
+  --hero-top: rgba(29, 185, 84, 0.28);
+  --hero-bottom: rgba(12, 94, 44, 0.16);
+  --user-bubble-a: rgba(29, 185, 84, 0.16);
+  --user-bubble-b: rgba(12, 94, 44, 0.12);
+  --active-card-a: rgba(29, 185, 84, 0.18);
+  --active-card-b: rgba(12, 94, 44, 0.14);
 }
 
 body::before {
@@ -105,8 +140,8 @@ body::before {
 }
 
 .persona-card.is-active {
-  border-color: rgba(227, 66, 98, 0.45);
-  background: linear-gradient(135deg, rgba(227, 66, 98, 0.12), rgba(255, 138, 91, 0.12));
+  border-color: color-mix(in srgb, var(--accent) 45%, white);
+  background: linear-gradient(135deg, var(--active-card-a), var(--active-card-b));
 }
 
 .persona-card strong {
@@ -127,6 +162,16 @@ body::before {
   font: 500 0.72rem/1 "IBM Plex Mono", monospace;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.persona-card[data-platform="apple"] .persona-platform {
+  background: rgba(244, 81, 108, 0.12);
+  color: #c63d57;
+}
+
+.persona-card[data-platform="spotify"] .persona-platform {
+  background: rgba(29, 185, 84, 0.14);
+  color: #14833c;
 }
 
 .chips button,
@@ -208,7 +253,7 @@ body::before {
 
 .message.user {
   align-self: flex-end;
-  background: linear-gradient(135deg, rgba(227, 66, 98, 0.12), rgba(255, 138, 91, 0.16));
+  background: linear-gradient(135deg, var(--user-bubble-a), var(--user-bubble-b));
 }
 
 .message.assistant {
@@ -246,7 +291,7 @@ textarea {
 }
 
 textarea:focus {
-  outline: 2px solid rgba(227, 66, 98, 0.25);
+  outline: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
   outline-offset: 2px;
 }
 
@@ -256,7 +301,7 @@ textarea:focus {
 
 .composer button {
   padding: 12px 18px;
-  background: var(--ink);
+  background: var(--accent);
   color: white;
 }
 
